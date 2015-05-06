@@ -1,0 +1,322 @@
+<?php
+App::import('Model', 'Imagene');
+$modeloImagenes = new Imagene();
+?>
+<?php $rol = $this->Session->read('Auth.User.role'); ?>
+<?php $idUsuario = $this->Session->read('Auth.User.id'); ?>
+<!-- end: Shop Page title -->
+<div class="row clearfix f-space10"></div>
+<div class="container"> 
+    <!-- row -->
+    <div class="row">
+        <div class="col-md-9 col-sm-12 col-xs-12 box-block">
+            <div class="box-heading category-heading"><span>Showing 1-9 of 240 products</span>
+                <ul class="nav nav-pills pull-right">
+                    <li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" href="#a"> 9 per page <i class="fa fa-sort fa-fw"></i> </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#a">12 per page</a></li>
+                            <li><a href="#a">15 per page</a></li>
+                            <li><a href="#a">18 per page</a></li>
+                            <li><a href="#a">21 per page</a></li>
+                            <li><a href="#a">100 per page</a></li>
+                            <li><a href="#a">Show all</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" href="#a"> Sort by <i class="fa fa-sort fa-fw"></i> </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#a">Name (A-Z)</a></li>
+                            <li><a href="#a">Name (Z-A)</a></li>
+                            <li><a href="#a">Price (Low-High)</a></li>
+                            <li><a href="#a">Price (High-Low)</a></li>
+                            <li><a href="#a">Rating Highest</a></li>
+                            <li><a href="#a">Rating Lowest</a></li>
+                            <li><a href="#a">Recent</a></li>
+                        </ul>
+                    </li>
+                    <li class="view-list"> <a href="category-list.html"> <i class="fa fa-list-ul fa-fw"></i></a> </li>
+                    <li class="view-grid active"> <a href="category-grid.html"> <i class="fa fa-th-large fa-fw"></i></a> </li>
+                </ul>
+            </div>
+            <div class="row clearfix f-space20"></div>
+            <div class="box-content">
+                <div class="box-products"> 
+                    <!-- Products Row -->
+                    <div class="row box-product"> 
+                        <!-- Product -->
+                        <?php for ($i = 0; $i <= 2; $i++): ?>
+                        <?php $idProducto=$productos[$i]['Producto']['id']?>
+                        <?php if(!empty($idProducto) ): ?>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="product-block">
+                                    <div class="image">
+                                                <div class="product-label product-sale"><span>SALE</span></div>
+                                                <?php
+                                                    $imagenesProducto = $modeloImagenes->find('all', array(
+                                                    'recursive' => -1,
+                                                    'conditions' => array('Imagene.producto_id' => $idProducto)
+                                                ));
+                                                ?>
+                                                <?php foreach ($imagenesProducto as $ip): ?>
+                                                    <?php if ($ip['Imagene']['numero'] == 1): ?>
+                                                        <a class="img" href="<?php echo $this->Html->url(array('action' => 'detalle', $idProducto)); ?>"><img alt="product info" src="<?php echo $this->webroot; ?>files/img/<?php echo $ip['Imagene']['imagen']; ?>" title="product title"></a>
+                                    </div>
+                                                     <?php endif; ?>
+                                                <?php endforeach; ?>
+                                        <div class="product-meta">
+                                                <div class="name"><a href="<?php echo $this->Html->url(array('action' => 'detalle', $idProducto)); ?>"><?php echo $productos[$i]['Producto']['nombre']; ?></a></div>
+                                                <div class="big-price">
+                                                    <?php if ($rol == 'visitante'): ?>
+                                                        <span class="price-new">
+                                                            <span class="sym">$</span><?php echo $productos[$i]['Producto']['precio']; ?>
+                                                        </span> 
+                                                    <?php else: ?>
+                                                        <span class="price-new">
+                                                            <span class="sym">$</span>
+                                                        </span> 
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="big-btns"> <a class="btn btn-default btn-view pull-left" href="<?php echo $this->Html->url(array('action' => 'detalle', $idProducto)); ?>">View</a> <a class="btn btn-default btn-addtocart pull-right" href="#">Add to Cart</a>
+                                                </div>
+                                                <div class="small-price"> 
+                                                    <?php if ($rol == 'visitante'): ?>
+                                                        <span class="price-new">
+                                                            <span class="sym">$</span><?php echo $productos[$i]['Producto']['precio']; ?>
+                                                        </span> 
+                                                    <?php else: ?>
+                                                        <span class="price-new">
+                                                            <span class="sym">$</span>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="rating"> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> </div>
+                                                <div class="small-btns">                                                    
+                                                    <?php if ($rol == 'visitante'): ?>
+                                                            <button class="btn btn-default btn-addtocart pull-left" id="btnCart_<?php echo $idProducto; ?>" data-toggle="tooltip" title="Add to Cart"> <i class="fa fa-shopping-cart fa-fw"></i> </button>
+                                                        <script type="text/javascript">
+                                                            $("#btnCart_<?php echo $idProducto; ?>").bind('click', function() {
+                                                                $.ajax({
+                                                                    async: true,
+                                                                    type: 'post',
+                                                                    complete: function(request, json) {
+                                                                        $('#carrito').html(request.responseText);
+                                                                    }, url: '<?php echo $this->Html->url(array('action' => 'ajaxadcarrito', $idUsuario, $idProducto)); ?>'});
+
+                                                                $("#btnCart_<?php echo $idProducto; ?>").animate({
+                                                                    opacity: 0.5,                                                                    
+                                                                    //height: "toggle",
+                                                                    //opacity: "toggle"
+                                                                }, {
+                                                                    duration: "slow"
+                                                                })
+                                                            });
+                                                        </script>
+                                                    <?php else: ?>
+                                                        <button class="btn btn-default btn-compare pull-left" data-toggle="tooltip" title="Registrate para estas opciones"> <i class="fa fa-retweet fa-fw"></i> </button>
+                                                        <button class="btn btn-default btn-wishlist pull-left" data-toggle="tooltip" title="Registrate para estas opciones"> <i class="fa fa-heart fa-fw"></i> </button>
+                                                        <button class="btn btn-default btn-addtocart pull-left" data-toggle="tooltip" title="Registrate para estas opciones"> <i class="fa fa-shopping-cart fa-fw"></i> </button>
+                                                    <?php endif; ?>
+                                                </div>
+                                </div>
+                                <div class="meta-back"></div>
+                            </div>
+                        </div>
+                                <?php else: ?>
+                            <?php endif; ?>
+                        <?php endfor;?>
+                    </div>
+                    <!-- end: Products Row -->
+                    <div class="clearfix f-space30"></div>
+                    <!-- Products Row -->
+                    <div class="row box-product"> 
+                        <!-- Product -->
+                        <?php for ($i = 3; $i <= 5; $i++): ?>
+                        <?php $idProducto=$productos[$i]['Producto']['id']?>
+                        <?php if(!empty($idProducto) ): ?>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="product-block">
+                                <div class="image">
+                                                <div class="product-label product-sale"><span>SALE</span></div>
+                                                <?php
+                                                $imagenesProducto = $modeloImagenes->find('all', array(
+                                                    'recursive' => -1,
+                                                    'conditions' => array('Imagene.producto_id' => $idProducto)
+                                                ));
+                                                ?>
+                                                <?php foreach ($imagenesProducto as $ip): ?>
+                                                    <?php if ($ip['Imagene']['numero'] == 1): ?>
+                                                        <a class="img" href="<?php echo $this->Html->url(array('action' => 'detalle', $idProducto)); ?>"><img alt="product info" src="<?php echo $this->webroot; ?>files/img/<?php echo $ip['Imagene']['imagen']; ?>" title="product title"></a>
+                                    </div>
+                                                     <?php endif; ?>
+                                            <?php endforeach; ?>
+                                 <div class="product-meta">
+                                                <div class="name"><a href="<?php echo $this->Html->url(array('action' => 'detalle', $idProducto)); ?>"><?php echo $productos[$i]['Producto']['nombre']; ?></a></div>
+                                                <div class="big-price">
+                                                    <?php if ($rol == 'visitante'): ?>
+                                                        <span class="price-new">
+                                                            <span class="sym">$</span><?php echo $productos[$i]['Producto']['precio']; ?>
+                                                        </span> 
+                                                    <?php else: ?>
+                                                        <span class="price-new">
+                                                            <span class="sym">$</span>
+                                                        </span> 
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="big-btns"> <a class="btn btn-default btn-view pull-left" href="<?php echo $this->Html->url(array('action' => 'detalle', $idProducto)); ?>">View</a> <a class="btn btn-default btn-addtocart pull-right" href="#">Add to Cart</a> </div>
+                                                <div class="small-price"> 
+                                                    <?php if ($rol == 'visitante'): ?>
+                                                        <span class="price-new">
+                                                            <span class="sym">$</span><?php echo $productos[$i]['Producto']['precio']; ?>
+                                                        </span> 
+                                                    <?php else: ?>
+                                                        <span class="price-new">
+                                                            <span class="sym">$</span>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="rating"> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> </div>
+                                                <div class="small-btns">                                                    
+                                                    <?php if ($rol == 'visitante'): ?>
+                                                            <button class="btn btn-default btn-addtocart pull-left" id="btnCart_<?php echo $idProducto; ?>" data-toggle="tooltip" title="Add to Cart"> <i class="fa fa-shopping-cart fa-fw"></i> </button>
+                                                        <script type="text/javascript">
+                                                            $("#btnCart_<?php echo $idProducto; ?>").bind('click', function() {
+                                                                $.ajax({
+                                                                    async: true,
+                                                                    type: 'post',
+                                                                    complete: function(request, json) {
+                                                                        $('#carrito').html(request.responseText);
+                                                                    }, url: '<?php echo $this->Html->url(array('action' => 'ajaxadcarrito', $idUsuario, $idProducto)); ?>'});
+
+                                                                $("#btnCart_<?php echo $idProducto; ?>").animate({
+                                                                    opacity: 0.5,                                                                    
+                                                                    //height: "toggle",
+                                                                    //opacity: "toggle"
+                                                                }, {
+                                                                    duration: "slow"
+                                                                })
+                                                            });
+                                                        </script>
+                                                    <?php else: ?>
+                                                        <button class="btn btn-default btn-compare pull-left" data-toggle="tooltip" title="Registrate para estas opciones"> <i class="fa fa-retweet fa-fw"></i> </button>
+                                                        <button class="btn btn-default btn-wishlist pull-left" data-toggle="tooltip" title="Registrate para estas opciones"> <i class="fa fa-heart fa-fw"></i> </button>
+                                                        <button class="btn btn-default btn-addtocart pull-left" data-toggle="tooltip" title="Registrate para estas opciones"> <i class="fa fa-shopping-cart fa-fw"></i> </button>
+                                                    <?php endif; ?>
+                                                </div>
+                                </div>
+                                <div class="meta-back"></div>
+                            </div>
+                        </div>
+                                <?php else: ?>
+                            <?php endif; ?>
+                        <?php endfor;?>
+                    </div>
+                    <div class="clearfix f-space30"></div>
+                    <div class="row box-product"> 
+                        <!-- Product -->
+                        <?php for ($i = 6; $i <= 8; $i++): ?>
+                        <?php $idProducto=$productos[$i]['Producto']['id']?>
+                        <?php if(!empty($idProducto) ): ?>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <div class="product-block">
+                                    <div class="image">
+                                                <div class="product-label product-sale"><span>SALE</span></div>
+                                                <?php
+                                                $imagenesProducto = $modeloImagenes->find('all', array(
+                                                    'recursive' => -1,
+                                                    'conditions' => array('Imagene.producto_id' => $idProducto)
+                                                ));
+                                                ?>
+                                                <?php foreach ($imagenesProducto as $ip): ?>
+                                                    <?php if ($ip['Imagene']['numero'] == 1): ?>
+                                                        <a class="img" href="<?php echo $this->Html->url(array('action' => 'detalle', $idProducto)); ?>"><img alt="product info" src="<?php echo $this->webroot; ?>files/img/<?php echo $ip['Imagene']['imagen']; ?>" title="product title"></a>
+                                    </div>
+                                                     <?php endif; ?>
+                                                <?php endforeach; ?>
+                                        <div class="product-meta">
+                                                <div class="name"><a href="<?php echo $this->Html->url(array('action' => 'detalle', $idProducto)); ?>"><?php echo $productos[$i]['Producto']['nombre']; ?></a></div>
+                                                <div class="big-price">
+                                                    <?php if ($rol == 'visitante'): ?>
+                                                        <span class="price-new">
+                                                            <span class="sym">$</span><?php echo $productos[$i]['Producto']['precio']; ?>
+                                                        </span> 
+                                                    <?php else: ?>
+                                                        <span class="price-new">
+                                                            <span class="sym">$</span>
+                                                        </span> 
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="big-btns"> <a class="btn btn-default btn-view pull-left" href="<?php echo $this->Html->url(array('action' => 'detalle', $idProducto)); ?>">View</a> <a class="btn btn-default btn-addtocart pull-right" href="#">Add to Cart</a> </div>
+                                                <div class="small-price"> 
+                                                    <?php if ($rol == 'visitante'): ?>
+                                                        <span class="price-new">
+                                                            <span class="sym">$</span><?php echo $productos[$i]['Producto']['precio']; ?>
+                                                        </span> 
+                                                    <?php else: ?>
+                                                        <span class="price-new">
+                                                            <span class="sym">$</span>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="rating"> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> </div>
+                                                <div class="small-btns">                                                    
+                                                    <?php if ($rol == 'visitante'): ?>
+                                                            <button class="btn btn-default btn-addtocart pull-left" id="btnCart_<?php echo $idProducto; ?>" data-toggle="tooltip" title="Add to Cart"> <i class="fa fa-shopping-cart fa-fw"></i> </button>
+                                                        <script type="text/javascript">
+                                                            $("#btnCart_<?php echo $idProducto; ?>").bind('click', function() {
+                                                                $.ajax({
+                                                                    async: true,
+                                                                    type: 'post',
+                                                                    complete: function(request, json) {
+                                                                        $('#carrito').html(request.responseText);
+                                                                    }, url: '<?php echo $this->Html->url(array('action' => 'ajaxadcarrito', $idUsuario, $idProducto)); ?>'});
+
+                                                                $("#btnCart_<?php echo $idProducto; ?>").animate({
+                                                                    opacity: 0.5,                                                                    
+                                                                    //height: "toggle",
+                                                                    //opacity: "toggle"
+                                                                }, {
+                                                                    duration: "slow"
+                                                                })
+                                                            });
+                                                        </script>
+                                                    <?php else: ?>
+                                                        <button class="btn btn-default btn-compare pull-left" data-toggle="tooltip" title="Registrate para estas opciones"> <i class="fa fa-retweet fa-fw"></i> </button>
+                                                        <button class="btn btn-default btn-wishlist pull-left" data-toggle="tooltip" title="Registrate para estas opciones"> <i class="fa fa-heart fa-fw"></i> </button>
+                                                        <button class="btn btn-default btn-addtocart pull-left" data-toggle="tooltip" title="Registrate para estas opciones"> <i class="fa fa-shopping-cart fa-fw"></i> </button>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                <div class="meta-back"></div>
+                            </div>
+                        </div>
+                                <?php else: ?>
+                            <?php endif; ?>
+                        <?php endfor;?>
+                    </div>
+                    <!-- end: Products Row -->
+                </div>
+            </div>
+            <div class="clearfix f-space30"></div>
+           
+        </div>
+
+        <!-- side bar -->
+        <div class="col-md-3 col-sm-12 col-xs-12 box-block page-sidebar">
+             <!-- Filter by -->
+
+            <!-- end: Filter by -->
+
+            
+            
+            
+            </div>
+             <!-- Productos Especiales -->
+        <?php echo $this->element('tienda/especiales'); ?>
+        <!-- fin especiales -->
+            
+
+        </div>
+        <!-- end:sidebar --> 
+    </div>
+    <!-- end:row --> 
+</div>
+<!-- end: container-->
