@@ -79,7 +79,7 @@ $modeloImagenes = new Imagene();
             <!-- Title and rating info -->
             <div class="title">
               <h1><?php echo $datosProducto['Producto']['nombre']; ?></h1>
-              <div class="rating"> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <span>Este producto ha tenido 30 comentario(s) <a href="#a">Comentar</a></span> </div>
+              <div class="rating"> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-half-o"></i> <i class="fa fa-star-o"></i> <span>This Product has 30 comments. <a href="#a">Comment</a></span> </div>
             </div>
             <!-- end: Title and rating info -->
 
@@ -173,8 +173,8 @@ $modeloImagenes = new Imagene();
       <!-- Details Info/Reviews/Tags --> 
       <!-- Nav tabs -->
       <ul class="nav nav-tabs blog-tabs nav-justified">
-        <li class="active"><a href="#details-info" data-toggle="tab"><i class="fa  fa-th-list fa-fw"></i> Detalles</a></li>
-        <li><a href="#reviews" data-toggle="tab"><i class="fa fa-comments fa-fw"></i> Comentarios</a></li>
+        <li class="active"><a href="#details-info" data-toggle="tab"><i class="fa  fa-th-list fa-fw"></i> Details</a></li>
+        <li><a href="#reviews" data-toggle="tab"><i class="fa fa-comments fa-fw"></i> Comments</a></li>
       </ul>
       <!-- Tab panes -->
       <div class="tab-content">

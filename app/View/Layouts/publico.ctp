@@ -131,7 +131,7 @@
                         <?php if ($urlBase == '/' || $urlBase == '/productos/tienda'): ?>
                             <div class="menu-heading"> <span> <i class="fa fa-bars"></i> Categories</span> </div>
                         <?php else: ?>
-                            <div class="menu-heading menuHeadingdropdown"> <span> <i class="fa fa-bars"></i> Categorias</span> </div>
+                            <div class="menu-heading menuHeadingdropdown"> <span> <i class="fa fa-bars"></i> Categories</span> </div>
                         <?php endif; ?>
                         <!-- Mega Menu -->                        
                         <?php echo $this->element('tienda/menuprincipal'); ?>
